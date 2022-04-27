@@ -13,6 +13,8 @@ class SettingsPageStats extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children:[
             //statistiky
+            Center(child: AppLargeText(text: "Statistiky uživatele:", size: 20, color: AppColors.textColor1)),
+            SizedBox(height: 20),
             Container(
               transform: Matrix4.translationValues(0.0, -40.0, 0.0),
               width: double.maxFinite,

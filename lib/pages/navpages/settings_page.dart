@@ -110,7 +110,6 @@ class _SettingsPageState extends State<SettingsPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               AppLargeText(text: "@jmeno", color: AppColors.textColor1,size: 20),
-                              SizedBox(height: 30),
                             ],
                           ),
                         ),
