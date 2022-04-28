@@ -1,3 +1,5 @@
+import 'package:ebrana_schody/db/floors_database.dart';
+import 'package:ebrana_schody/db/user.dart';
 import 'package:ebrana_schody/misc/colors.dart';
 import 'package:ebrana_schody/widgets/app_large_text.dart';
 import 'package:ebrana_schody/widgets/app_text.dart';
@@ -7,12 +9,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class registrationPage extends StatefulWidget {
-  const registrationPage({Key? key}) : super(key: key);
+
+  const registrationPage({Key? key, required this.values}) : super(key: key);
+
+  final List<String> values;
 
   @override
   State<registrationPage> createState() => _registrationPageState();
 }
-
 class _registrationPageState extends State<registrationPage> {
   @override
   Widget build(BuildContext context) {
@@ -56,5 +60,14 @@ class _registrationPageState extends State<registrationPage> {
         ),
       ),
     );
+  }
+  Future addUser() async{
+    final user = User(
+        email: widget.values[0],
+        login: 'test',
+        password: 'test',
+        floors: 0);
+
+    await FloorsDatabase.instance.create(user);
   }
 }
