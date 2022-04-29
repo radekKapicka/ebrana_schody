@@ -37,7 +37,7 @@ class _InputTextState extends State<InputText> {
             obscureText: widget.secureText,
             onEditingComplete: (){
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => RegistrationPage(values: inputcontroller.text),
+                  builder: (context) => RegistrationPage(),
               ));
             },
           )

@@ -1,4 +1,5 @@
 import 'package:ebrana_schody/misc/colors.dart';
+import 'package:ebrana_schody/pages/registration_page.dart';
 import 'package:ebrana_schody/widgets/app_large_text.dart';
 import 'package:ebrana_schody/widgets/app_text.dart';
 import 'package:ebrana_schody/widgets/input_text.dart';
@@ -49,7 +50,15 @@ class _WelcomePageState extends State<WelcomePage> {
                             SizedBox(height: 20,),
                             AppText(text: "Nemáte ještě účet?"),
                             SizedBox(height: 20,),
-                            ResponsiveButton(textButton: "Zaregistrovat se"),
+                            ElevatedButton(
+                              child:
+                                AppText(text: "Zaregistrovat se"),
+                                onPressed: (){
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) => const RegistrationPage())
+                                  );
+                                }
+                              ),
                           ],
                         )
                   ),
