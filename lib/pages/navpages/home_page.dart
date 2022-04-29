@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (_,index){
                   final user = users[index];
                   refreshUsers();
-                  return AppText(text: user.login);
+                  return AppText(text: user.password);
                 },
               ),
             ),
