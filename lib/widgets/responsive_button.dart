@@ -26,7 +26,7 @@ class ResponsiveButton extends StatelessWidget {
           AppText(text: textButton,color: AppColors.white),
           Padding(padding:EdgeInsets.fromLTRB(10, 0, 0, 0),
             child:Image.asset("img/arrow-2.png",height: 20)
-          )
+          ),
         ],
       ),
     );

@@ -1,8 +1,11 @@
+import 'package:ebrana_schody/db/floors_database.dart';
 import 'package:ebrana_schody/widgets/app_large_text.dart';
 import 'package:ebrana_schody/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ebrana_schody/misc/colors.dart';
+
+import '../../db/user.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,6 +15,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  late List<User> users;
+  bool isLoading = false;
+
+  @override
+  void initState(){
+    super.initState();
+
+    refreshUsers();
+  }
+
+  Future refreshUsers() async{
+    setState(() => isLoading = true);
+    this.users = await FloorsDatabase.instance.readAllUsers();
+    setState(() => isLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,8 +54,22 @@ class _HomePageState extends State<HomePage> {
             Container(
               transform: Matrix4.translationValues(0.0, -40.0, 0.0),
               width: double.maxFinite,
-              //height: double.maxFinite,
-              child: ListView.builder(
+              height: double.maxFinite,
+              child:isLoading
+              ? CircularProgressIndicator()
+              : users.isEmpty
+                ? AppText(
+                  text: "žádní uživatelé",
+              ): ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (_,index){
+                  final user = users[index];
+                  refreshUsers();
+                  return AppText(text: user.login);
+                },
+              ),
+            ),
+              /*ListView.builder(
                 physics: ScrollPhysics(parent: null),
                 shrinkWrap: true,
                 itemCount: 10,
@@ -94,8 +128,7 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(height: 70),
                     ],
                   );
-                  }),
-            ),
+                  })*/
           ]
         ),
       )

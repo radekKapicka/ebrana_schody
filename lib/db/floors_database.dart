@@ -33,7 +33,7 @@ class FloorsDatabase{
       ${UserFields.email} $textType,
       ${UserFields.login} $textType,
       ${UserFields.password} $textType,
-      ${UserFields.floors} $intType,
+      ${UserFields.floors} $intType
     )
     ''');
   }
@@ -62,6 +62,14 @@ class FloorsDatabase{
     }
   }
 
+  Future<List<User>> readAllUsers() async{
+    final db = await instance.database;
+
+    final result = await db.query(tableUser);
+    
+    return result.map((json) => User.fromJson(json)).toList();
+  }
+
   Future<int> update(User user) async{
     final db = await instance.database;
 
@@ -85,7 +93,6 @@ class FloorsDatabase{
 
   Future close() async{
     final db = await instance.database;
-
     db.close();
   }
 }

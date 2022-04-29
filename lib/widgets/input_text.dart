@@ -1,4 +1,5 @@
 import 'package:ebrana_schody/misc/colors.dart';
+import 'package:ebrana_schody/pages/registration_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,12 +16,15 @@ class InputText extends StatefulWidget {
 }
 
 class _InputTextState extends State<InputText> {
+  TextEditingController inputcontroller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
           TextField(
+            controller: inputcontroller,
             decoration: InputDecoration(
               hintText: widget.hintText,
               labelText: widget.labelText,
@@ -31,9 +35,15 @@ class _InputTextState extends State<InputText> {
               border: OutlineInputBorder(),
               ),
             obscureText: widget.secureText,
+            onEditingComplete: (){
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RegistrationPage(values: inputcontroller.text),
+              ));
+            },
           )
         ],
       ),
+
     );
   }
 }

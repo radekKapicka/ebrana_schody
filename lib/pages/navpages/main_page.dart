@@ -17,7 +17,8 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   List pages = [
-    LadderPage(),
+    //LadderPage(),
+    RegistrationPage(values: "",),
     HomePage(),
     StatPage(),
     SettingsPage(),
