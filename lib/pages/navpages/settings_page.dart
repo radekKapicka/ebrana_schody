@@ -1,3 +1,4 @@
+import 'package:ebrana_schody/db/user.dart';
 import 'package:ebrana_schody/misc/colors.dart';
 import 'package:ebrana_schody/pages/navpages/edit_page.dart';
 import 'package:ebrana_schody/pages/navpages/settings_page_stats.dart';
@@ -5,6 +6,8 @@ import 'package:ebrana_schody/widgets/app_large_text.dart';
 import 'package:ebrana_schody/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../db/floors_database.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -109,7 +112,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              AppLargeText(text: "@jmeno", color: AppColors.textColor1,size: 20),
+                              AppLargeText(text: "@", color: AppColors.textColor1,size: 20),
                             ],
                           ),
                         ),

@@ -8,18 +8,28 @@ import 'package:ebrana_schody/widgets/responsive_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class registrationPage extends StatefulWidget {
+class RegistrationPage extends StatefulWidget {
 
-  const registrationPage({Key? key, required this.values}) : super(key: key);
+  const RegistrationPage({Key? key, required this.values}) : super(key: key);
 
-  final List<String> values;
+  final String values;
 
   @override
-  State<registrationPage> createState() => _registrationPageState();
+  State<RegistrationPage> createState() => _RegistrationPageState();
 }
-class _registrationPageState extends State<registrationPage> {
+class _RegistrationPageState extends State<RegistrationPage> {
+  final loginController = TextEditingController();
+  final emailController = TextEditingController();
+  final pwdController = TextEditingController();
+  final pwdControllController = TextEditingController();
+  String login = "";
+  String email = "";
+  String pwd = "";
+  String pwdControll = "";
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -44,15 +54,111 @@ class _registrationPageState extends State<registrationPage> {
                     SizedBox(height: 30,),
                     AppLargeText(text: "Registrace", color: AppColors.textColor1),
                     SizedBox(height: 20,),
-                    InputText(hintText: "Přihlašovací jméno", labelText: "Login", secureText: false),
+                    //InputText(hintText: "Přihlašovací jméno", labelText: "Login", secureText: false),
+                    TextField(
+                      controller: loginController,
+                      decoration: InputDecoration(
+                        hintText: "Přihlašovací jméno",
+                        labelText: "Login",
+                        labelStyle: TextStyle(
+                          fontSize: 18,
+                          color: AppColors.textColor2,
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: false,
+                      onChanged: (value){
+                        setState(() {
+                          () => this.login = value;
+                        });
+                      },
+                      onSubmitted: (value){
+                        setState(() {
+                              () => this.login = value;
+                        });
+                      },
+                    ),
                     SizedBox(height: 20,),
-                    InputText(hintText: "E-mailová adresa", labelText: "E-mail", secureText: false),
+                    TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        hintText: "Zadejte Váš email",
+                        labelText: "Email",
+                        labelStyle: TextStyle(
+                          fontSize: 18,
+                          color: AppColors.textColor2,
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: false,
+                      onChanged: (value){
+                        setState(() {
+                              () => this.email = value;
+                        });
+                      },
+                      onSubmitted: (value){
+                        setState(() {
+                              () => this.email = value;
+                        });
+                      },
+                    ),
                     SizedBox(height: 20,),
-                    InputText(hintText: "Zvolte si heslo", labelText: "Heslo", secureText: true),
+                    TextField(
+                      controller: pwdController,
+                      decoration: InputDecoration(
+                        hintText: "Zvolte si heslo",
+                        labelText: "Heslo",
+                        labelStyle: TextStyle(
+                          fontSize: 18,
+                          color: AppColors.textColor2,
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                      onChanged: (value){
+                        setState(() {
+                              () => this.pwd = value;
+                        });
+                      },
+                      onSubmitted: (value){
+                        setState(() {
+                              () => this.pwd = value;
+                        });
+                      },
+                    ),
                     SizedBox(height: 20,),
-                    InputText(hintText: "Kotrola zadání hesla", labelText: "Kontrola hesla", secureText: true),
+                    TextField(
+                      controller: pwdControllController,
+                      decoration: InputDecoration(
+                        hintText: "Kotrola zadání hesla",
+                        labelText: "Kontrola hesla",
+                        labelStyle: TextStyle(
+                          fontSize: 18,
+                          color: AppColors.textColor2,
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                      onChanged: (value){
+                        setState(() {
+                              () => this.pwdControll = value;
+                        });
+                      },
+                      onSubmitted: (value){
+                        setState(() {
+                              () => this.pwdControll = value;
+                        });
+                      },
+                    ),
                     SizedBox(height: 20,),
-                    ResponsiveButton(textButton: "Zaregistrovat se"),
+                    ElevatedButton(
+                      child:
+                        AppText(text: "Zaregistrovat se"),
+                        onPressed: (){
+                          addUser();
+                        }
+                    ),
+                    //AppText(text: login),
                   ],
                 )
             ),
@@ -62,12 +168,18 @@ class _registrationPageState extends State<registrationPage> {
     );
   }
   Future addUser() async{
-    final user = User(
-        email: widget.values[0],
-        login: 'test',
-        password: 'test',
-        floors: 0);
-
-    await FloorsDatabase.instance.create(user);
+    if(pwdController.text == pwdControllController.text){
+      final user = User(
+          email: emailController.text,
+          login: loginController.text,
+          password: pwdController.text,
+          floors: 0);
+      await FloorsDatabase.instance.create(user);
+      //print("uspech"+emailController.text+loginController.text+pwdController.text);
+    }else{
+      throw Exception("hesla se neshodují");
+    }
+    //print(loginController.text);
+    //await FloorsDatabase.instance.create(user);
   }
 }
