@@ -19,7 +19,7 @@ class _MainPageState extends State<MainPage> {
   List pages = [
     //LadderPage(),
     RegistrationPage(),
-    HomePage(),
+    //HomePage(),
     StatPage(),
     SettingsPage(),
   ];

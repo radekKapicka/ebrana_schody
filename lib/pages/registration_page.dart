@@ -79,13 +79,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           border: OutlineInputBorder(),
                         ),
                         obscureText: false,
-                        validator: (value){
-                          if(value!.isEmpty || !RegExp(r'^[a-zA-Z0-9_\-\.]+$').hasMatch(value!)){
-                            return "Smí obsahovat pouze písmena a čísla";
-                          }else{
-                            return null;
-                          }
-                        },
+
                         onChanged: (value){
                           setState(() {
                             () => this.login = value;
@@ -166,6 +160,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           }
                         },
                         onChanged: (value){
+                          refreshUsers();
                           setState(() {
                                 () => this.pwdControll = value;
                           });
@@ -210,9 +205,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
           password: Crypt.sha256(pwdController.text, salt: "radekjenejvetsiborec").toString(),
           floors: 0);
       await FloorsDatabase.instance.create(user);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const HomePage())
-      );
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => HomePage(activeUser: user),
+      ));
       //print(pwdController.text);
     }else{
       throw Exception("hesla se neshodují nebo login již existuje");
