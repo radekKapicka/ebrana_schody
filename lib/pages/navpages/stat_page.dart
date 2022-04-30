@@ -4,9 +4,18 @@ import 'package:ebrana_schody/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class StatPage extends StatelessWidget {
-  const StatPage({Key? key}) : super(key: key);
+import '../../db/user.dart';
 
+class StatPage extends StatefulWidget {
+  const StatPage({Key? key, required this.activeUser}) : super(key: key);
+
+  final User activeUser;
+
+  @override
+  State<StatPage> createState() => _StatPageState();
+}
+
+class _StatPageState extends State<StatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,12 +59,12 @@ class StatPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            AppLargeText(text: "@jmeno", color: AppColors.textColor1,size: 20),
+                            AppLargeText(text: widget.activeUser.login, color: AppColors.textColor1,size: 20),
                             SizedBox(height: 10),
                             Container(
                                 padding:const EdgeInsets.only(left:50, right: 50),
                                 child:
-                                AppText(text: "Seznam dosažených achievementů uživatele @giga_chad!"))
+                                AppText(text: "Seznam dosažených achievementů uživatele "+widget.activeUser.login+"!"))
                           ],
                         ),
                       )

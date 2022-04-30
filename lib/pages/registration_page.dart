@@ -11,6 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:crypt/crypt.dart';
 
+import 'navpages/main_page.dart';
+
 class RegistrationPage extends StatefulWidget {
 
   const RegistrationPage({Key? key}) : super(key: key);
@@ -206,7 +208,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           floors: 0);
       await FloorsDatabase.instance.create(user);
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => HomePage(activeUser: user),
+        builder: (context) => MainPage(activeUser: user),
       ));
       //print(pwdController.text);
     }else{

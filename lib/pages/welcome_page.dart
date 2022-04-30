@@ -1,6 +1,7 @@
 import 'package:crypt/crypt.dart';
 import 'package:ebrana_schody/misc/colors.dart';
 import 'package:ebrana_schody/pages/navpages/home_page.dart';
+import 'package:ebrana_schody/pages/navpages/main_page.dart';
 import 'package:ebrana_schody/pages/registration_page.dart';
 import 'package:ebrana_schody/widgets/app_large_text.dart';
 import 'package:ebrana_schody/widgets/app_text.dart';
@@ -150,7 +151,7 @@ class _WelcomePageState extends State<WelcomePage> {
       if((users[i].login == "@"+loginController.text) && (users[i].password == Crypt.sha256(pwdController.text, salt: "radekjenejvetsiborec").toString())){
         user = users[i];
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => HomePage(activeUser: user),
+          builder: (context) => MainPage(activeUser: user),
         ));
       }else if((users[i].login != "@"+loginController.text) || (users[i].password != Crypt.sha256(pwdController.text, salt: "radekjenejvetsiborec").toString())){
         Navigator.push(context,
