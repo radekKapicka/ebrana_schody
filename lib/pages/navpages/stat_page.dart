@@ -22,6 +22,7 @@ class StatPage extends StatefulWidget {
 class _StatPageState extends State<StatPage> {
 
   late List<Achievement> achievements;
+  late List<User> users;
 
   @override
   void initState(){
@@ -31,6 +32,8 @@ class _StatPageState extends State<StatPage> {
 
   Future checkAchievements() async {
     this.achievements = await FloorsDatabase.instance.readAllAchievements();
+    this.users = await FloorsDatabase.instance.readAllUsersForStats();
+
   }
 
   List mountains = [
@@ -215,6 +218,4 @@ class _StatPageState extends State<StatPage> {
         )
     );
   }
-
-
 }

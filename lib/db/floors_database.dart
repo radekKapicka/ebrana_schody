@@ -100,7 +100,7 @@ class FloorsDatabase{
   Future<List<User>> readAllUsersForStats() async{
     final db = await instance.database;
 
-    final orderBy = '${UserFields.floors}';
+    final orderBy = '${UserFields.floors} DESC';
     final prom = 0;
     final where = '${UserFields.floors} >$prom';
     final result = await db.query(tableUser,where: where,orderBy: orderBy);
