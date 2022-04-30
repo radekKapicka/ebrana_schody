@@ -8,7 +8,9 @@ import 'package:ebrana_schody/misc/colors.dart';
 import '../../db/user.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key, required this.activeUser}) : super(key: key);
+
+  final User activeUser;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -61,11 +63,17 @@ class _HomePageState extends State<HomePage> {
                 ? AppText(
                   text: "žádní uživatelé",
               ): ListView.builder(
-                itemCount: users.length,
+                itemCount: 1,
                 itemBuilder: (_,index){
-                  final user = users[index];
                   refreshUsers();
-                  return AppText(text: user.password);
+                  return Column(
+                    children: [
+                      AppText(text: widget.activeUser.login),
+                      AppText(text: widget.activeUser.email),
+                      AppText(text: widget.activeUser.password),
+                      AppText(text:widget.activeUser.floors.toString()),
+                    ],
+                  );
                 },
               ),
             ),

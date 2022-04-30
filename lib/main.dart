@@ -1,5 +1,6 @@
 import 'package:ebrana_schody/pages/navpages/main_page.dart';
 import 'package:ebrana_schody/pages/welcome_page.dart';
+import 'package:ebrana_schody/root.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,13 +14,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'eBRANA schody',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
 
           primarySwatch: Colors.blue,
         ),
-        home: WelcomePage()
+        home: RootWidget()
     );
   }
 }
