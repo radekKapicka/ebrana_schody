@@ -1,7 +1,10 @@
 import 'package:crypt/crypt.dart';
 import 'package:ebrana_schody/db/floors_database.dart';
 import 'package:ebrana_schody/misc/colors.dart';
+import 'package:ebrana_schody/pages/navpages/main_page.dart';
 import 'package:ebrana_schody/pages/navpages/settings_page.dart';
+import 'package:ebrana_schody/pages/navpages/settings_page_stats.dart';
+import 'package:ebrana_schody/pages/navpages/stat_page.dart';
 import 'package:ebrana_schody/widgets/app_large_text.dart';
 import 'package:ebrana_schody/widgets/input_text.dart';
 import 'package:ebrana_schody/widgets/responsive_button.dart';
@@ -17,6 +20,7 @@ class EditPage extends StatefulWidget {
 
   final User activeUser;
 
+
   @override
   State<EditPage> createState() => _EditPageState();
 }
@@ -28,6 +32,28 @@ class _EditPageState extends State<EditPage> {
   String pwdNew = "";
 
   final formKeyEdit = GlobalKey<FormState>();
+
+  late List<Achievement> achievements;
+
+  @override
+  void initState(){
+    super.initState();
+    checkAchievements();
+  }
+
+
+  Future checkAchievements() async {
+    this.achievements = await FloorsDatabase.instance.readAllAchievements();
+  }
+
+  List mountains = [
+    107,
+    533,
+    885,
+    987,
+    1603,
+    2949,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -110,15 +136,10 @@ class _EditPageState extends State<EditPage> {
               Center(
                 child: ElevatedButton(
                     child:
-                    AppText(text: "Přidat achievement"),
+                    AppText(text: "Synchronizovat statistiky"),
                     onPressed: (){
-                      var test3 = widget.activeUser.id;
-                      final achievement = Achievement(
-                          user_id: widget.activeUser.login,
-                          datestamp: DateTime.now(),
-                          achievementlvl: 5);
-                          FloorsDatabase.instance.createAchievement(achievement);
-                          print(FloorsDatabase.instance.readAllAchievements());
+                      checkAchievements();
+                      StatSync();
                     }
                 ),
               ),
@@ -163,8 +184,96 @@ class _EditPageState extends State<EditPage> {
         email: widget.activeUser.email,
         login: widget.activeUser.login,
         password: widget.activeUser.password,
-        floors: 1100);
+        floors: 250);
 
     await FloorsDatabase.instance.update(user);
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MainPage(activeUser: user),
+    ));
+  }
+
+  Future StatSync() async{
+
+    if(widget.activeUser.floors >= mountains[0]){
+      final achievement = Achievement(
+          user_id: widget.activeUser.login,
+          datestamp: DateTime.now(),
+          achievementlvl: 0);
+
+      for(int i=0;i<=achievements.length-1;i++){
+        if(achievements[i].achievementlvl == 0){
+          if(achievements[i].user_id == widget.activeUser.login){
+            await FloorsDatabase.instance.createAchievement(achievement);
+          }
+
+        }
+      }
+
+    }else if(widget.activeUser.floors >= mountains[1] && widget.activeUser.floors < mountains[2]){
+      final achievement = Achievement(
+          user_id: widget.activeUser.login,
+          datestamp: DateTime.now(),
+          achievementlvl: 1);
+
+      for(int i=0;i<=achievements.length-1;i++){
+        if(achievements[i].achievementlvl != 1 && achievements[i].user_id != widget.activeUser.login){
+          await FloorsDatabase.instance.createAchievement(achievement);
+        }
+      }
+
+    }else if(widget.activeUser.floors >= mountains[2] && widget.activeUser.floors < mountains[3]){
+      final achievement = Achievement(
+          user_id: widget.activeUser.login,
+          datestamp: DateTime.now(),
+          achievementlvl: 2);
+
+      for(int i=0;i<=achievements.length-1;i++){
+        if(achievements[i].achievementlvl != 2 && achievements[i].user_id != widget.activeUser.login){
+          await FloorsDatabase.instance.createAchievement(achievement);
+        }
+      }
+
+    }else if(widget.activeUser.floors >= mountains[3] && widget.activeUser.floors < mountains[4]){
+      final achievement = Achievement(
+          user_id: widget.activeUser.login,
+          datestamp: DateTime.now(),
+          achievementlvl: 3);
+
+      for(int i=0;i<=achievements.length-1;i++){
+        if(achievements[i].achievementlvl != 3 && achievements[i].user_id != widget.activeUser.login){
+          await FloorsDatabase.instance.createAchievement(achievement);
+        }
+      }
+
+    }else if(widget.activeUser.floors >= mountains[4] && widget.activeUser.floors < mountains[5]){
+      final achievement = Achievement(
+          user_id: widget.activeUser.login,
+          datestamp: DateTime.now(),
+          achievementlvl: 4);
+
+      for(int i=0;i<=achievements.length-1;i++){
+        if(achievements[i].achievementlvl != 4 && achievements[i].user_id != widget.activeUser.login){
+          await FloorsDatabase.instance.createAchievement(achievement);
+        }
+      }
+
+    }else if(widget.activeUser.floors >= mountains[5]){
+      final achievement = Achievement(
+          user_id: widget.activeUser.login,
+          datestamp: DateTime.now(),
+          achievementlvl: 5);
+
+      for(int i=0;i<=achievements.length-1;i++){
+        if(achievements[i].achievementlvl != 5 && achievements[i].user_id != widget.activeUser.login){
+          await FloorsDatabase.instance.createAchievement(achievement);
+        }
+      }
+
+    }
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MainPage(activeUser: widget.activeUser)
+    )).then((value) => setState(() {
+      checkAchievements();
+    }));
   }
 }
