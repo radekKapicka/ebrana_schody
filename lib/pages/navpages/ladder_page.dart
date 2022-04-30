@@ -4,8 +4,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ebrana_schody/misc/colors.dart';
 
-class LadderPage extends StatelessWidget {
+import '../../db/floors_database.dart';
+import '../../db/user.dart';
+
+class LadderPage extends StatefulWidget {
   const LadderPage({Key? key}) : super(key: key);
+
+  @override
+  State<LadderPage> createState() => _LadderPageState();
+}
+
+class _LadderPageState extends State<LadderPage> {
+
+  late List<User> users;
+
+  @override
+  void initState(){
+    super.initState();
+    refreshUsers();
+  }
+
+  Future refreshUsers() async{
+    this.users = await FloorsDatabase.instance.readAllUsersForStats();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +81,7 @@ class LadderPage extends StatelessWidget {
                   child: ListView.builder(
                       physics: ScrollPhysics(parent: null),
                       shrinkWrap: true,
-                      itemCount: 20,
+                      itemCount: users.length,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (_, index){
                         return Column(
@@ -80,9 +102,9 @@ class LadderPage extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      AppLargeText(text: "#1",color: AppColors.textColor2, size: 20),
-                                      AppLargeText(text: "@jmeno", color: AppColors.textColor2,size: 20),
-                                      AppLargeText(text: "16000", color: AppColors.textColor2,size: 20)
+                                      AppLargeText(text: "#"+(index+1).toString(),color: AppColors.textColor2, size: 20),
+                                      AppLargeText(text: users[index].login, color: AppColors.textColor2,size: 20),
+                                      AppLargeText(text: users[index].floors.toString(), color: AppColors.textColor2,size: 20),
                                     ],
                                   )
                                 ],

@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:crypt/crypt.dart';
 
+import '../db/achievement.dart';
 import 'navpages/main_page.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -200,13 +201,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
   Future addUser() async{
-    if(pwdController.text == pwdControllController.text && !users.contains(loginController.text)){
+    if((pwdController.text == pwdControllController.text) && (!users.contains(loginController.text))){
       final user = User(
           email: emailController.text,
           login: "@"+loginController.text,
           password: Crypt.sha256(pwdController.text, salt: "radekjenejvetsiborec").toString(),
           floors: 0);
       await FloorsDatabase.instance.create(user);
+
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => MainPage(activeUser: user),
       ));

@@ -1,4 +1,5 @@
 import 'package:ebrana_schody/pages/navpages/main_page.dart';
+import 'package:ebrana_schody/pages/test_pedo.dart';
 import 'package:ebrana_schody/pages/welcome_page.dart';
 import 'package:ebrana_schody/root.dart';
 import 'package:flutter/material.dart';

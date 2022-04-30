@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ebrana_schody/misc/colors.dart';
 
+import '../../db/achievement.dart';
 import '../../db/user.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,21 +19,38 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  late List<Achievement> achievementsAll;
   late List<User> users;
-  bool isLoading = false;
 
   @override
   void initState(){
     super.initState();
 
-    refreshUsers();
+    checkAchievements();
   }
 
-  Future refreshUsers() async{
-    setState(() => isLoading = true);
-    this.users = await FloorsDatabase.instance.readAllUsers();
-    setState(() => isLoading = false);
+  Future checkAchievements() async {
+    this.achievementsAll = (await FloorsDatabase.instance.readAllAchievements());
+    this.users = await FloorsDatabase.instance.readAllUsersForStats();
   }
+
+  List mountains = [
+    "Vaalserberg",
+    "Sněžka",
+    "Gerlachovský štít",
+    "Zugspitze",
+    "Mont Blanc",
+    "Mount Everest",
+  ];
+
+  List mountainsImages = [
+    "vaalsberg.png",
+    "snezka.jpg",
+    "gerlach.png",
+    "zug.png",
+    "mb.png",
+    "everest.png",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -53,31 +71,34 @@ class _HomePageState extends State<HomePage> {
                   )
               ),
             ),
-            Container(
+            /*Container(
               transform: Matrix4.translationValues(0.0, -40.0, 0.0),
               width: double.maxFinite,
               height: double.maxFinite,
               child: ListView.builder(
-                itemCount: 1,
+                physics: ScrollPhysics(parent: null),
+                shrinkWrap: true,
+                itemCount: achievementsAll.length,
                 itemBuilder: (_,index){
-                  refreshUsers();
+                  checkAchievements();
                   return Column(
                     children: [
-                      AppText(text: widget.activeUser.login),
-                      AppText(text: widget.activeUser.email),
-                      AppText(text: widget.activeUser.password),
-                      AppText(text:widget.activeUser.floors.toString()),
+                      AppText(text:achievementsAll[index].id.toString()),
+                      SizedBox(
+                        height: 20,
+                      )
                     ],
                   );
                 },
               ),
-            ),
-              /*ListView.builder(
+            ),*/
+              ListView.builder(
                 physics: ScrollPhysics(parent: null),
                 shrinkWrap: true,
-                itemCount: 10,
+                itemCount: achievementsAll.length,
                   scrollDirection: Axis.vertical,
                   itemBuilder: (_, index){
+                  checkAchievements();
                   return Column(
                     children: [
                       //karta
@@ -109,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(80),
                                   image: DecorationImage(
                                       image: AssetImage(
-                                          "img/chad.jpeg"
+                                          "img/"+mountainsImages[achievementsAll[index].achievementlvl]
                                       ),
                                       fit: BoxFit.cover
                                   )
@@ -119,9 +140,9 @@ class _HomePageState extends State<HomePage> {
                               transform: Matrix4.translationValues(0.0, -35.0, 0.0),
                               child: Column(
                                 children: [
-                                  AppLargeText(text: "@jmeno", color: AppColors.textColor1,size: 20),
+                                  AppLargeText(text: achievementsAll[index].user_id, color: AppColors.textColor1,size: 20),
                                   SizedBox(height: 10),
-                                  AppText(text: "Uživatel @giga_chad právě dosáhl vystoupal na úrověň hory Mont Blanc!")
+                                  AppText(text: "Uživatel "+achievementsAll[index].user_id+" právě vystoupal na úrověň hory "+ mountains[achievementsAll[index].achievementlvl] +"!")
                                 ],
                               ),
                             )
@@ -131,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(height: 70),
                     ],
                   );
-                  })*/
+                  })
           ]
         ),
       )

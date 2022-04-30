@@ -3,8 +3,53 @@ import 'package:ebrana_schody/widgets/app_large_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SettingsPageStats extends StatelessWidget {
+import 'package:pedometer/pedometer.dart';
+import 'dart:async';
+
+
+String formatDate(DateTime d) {
+  return d.toString().substring(0, 19);
+}
+
+class SettingsPageStats extends StatefulWidget {
   const SettingsPageStats({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsPageStats> createState() => _SettingsPageStatsState();
+}
+
+class _SettingsPageStatsState extends State<SettingsPageStats> {
+
+  late Stream<StepCount> _stepCountStream;
+  String _steps = '?';
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
+
+  void onStepCount(StepCount event) {
+    print(event);
+    setState(() {
+      _steps = event.steps.toString();
+    });
+  }
+
+  void onStepCountError(error) {
+    print('onStepCountError: $error');
+    setState(() {
+      _steps = 'Step Count not available';
+    });
+  }
+
+  void initPlatformState() {
+    _stepCountStream = Pedometer.stepCountStream;
+    _stepCountStream.listen(onStepCount).onError(onStepCountError);
+
+    if (!mounted) return;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -16,25 +61,18 @@ class SettingsPageStats extends StatelessWidget {
             Center(child: AppLargeText(text: "Statistiky uživatele:", size: 20, color: AppColors.textColor1)),
             SizedBox(height: 20),
             Container(
-              transform: Matrix4.translationValues(0.0, -40.0, 0.0),
               width: double.maxFinite,
               //height: double.maxFinite,
-              child: ListView.builder(
-                  physics: ScrollPhysics(parent: null),
-                  shrinkWrap: true,
-                  itemCount: 5,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (_, index){
-                    return Column(
+              child: Column(
                       children: [
                         //stat
-                        AppLargeText(text: "Aktuální pozice v leaderboards:",size: 18,color: AppColors.textColor2,),
+                        AppLargeText(text: "Počet celkově nastoupaných pater:",size: 18,color: AppColors.textColor2,),
                         SizedBox(height: 20),
                         Container(
-                          width: 80,
-                          height: 80,
+                          width: 100,
+                          height: 100,
                           margin: const EdgeInsets.only(left:20,right: 20),
-                          padding: const EdgeInsets.only(left:20,right: 20),
+                          padding: const EdgeInsets.only(left:10,right: 10),
                           decoration: BoxDecoration(
                             color: AppColors.textColor1,
                             boxShadow: [
@@ -51,14 +89,13 @@ class SettingsPageStats extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              AppLargeText(text: "1", size:20,color: Colors.white,)
+                              AppLargeText(text: _steps, size:20,color: Colors.white,)
                             ],
                           ),
                         ),
                         SizedBox(height: 40),
                       ],
-                    );
-                  }),
+                    ),
             ),
           ]
       ),

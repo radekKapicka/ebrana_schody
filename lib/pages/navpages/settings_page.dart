@@ -7,6 +7,7 @@ import 'package:ebrana_schody/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../db/achievement.dart';
 import '../../db/floors_database.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -22,7 +23,22 @@ class _SettingsPageState extends State<SettingsPage> {
   int currentIndex =0;
   int clickCounter = 0;
 
+
+  late List<Achievement> achievementsAll;
+
   @override
+  void initState(){
+    super.initState();
+
+    checkAchievements();
+  }
+
+  Future checkAchievements() async {
+    this.achievementsAll =
+    (await FloorsDatabase.instance.readAllAchievements());
+  }
+
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(

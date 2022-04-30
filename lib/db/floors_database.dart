@@ -1,3 +1,4 @@
+import 'package:ebrana_schody/db/achievement.dart';
 import 'package:ebrana_schody/db/user.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -11,7 +12,7 @@ class FloorsDatabase{
   Future<Database> get database async{
     if(_database != null) return _database!;
 
-    _database = await _initDB('floors.db');
+    _database = await _initDB('floors-edited.db');
     return _database!;
   }
 
@@ -19,7 +20,7 @@ class FloorsDatabase{
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: 8, onCreate: _createDB, onUpgrade: _onUpgrade);
   }
 
   Future _createDB(Database db, int version) async{
@@ -34,6 +35,32 @@ class FloorsDatabase{
       ${UserFields.login} $textType,
       ${UserFields.password} $textType,
       ${UserFields.floors} $intType
+    )
+    ''');
+    await db.execute('''
+    CREATE TABLE $tableAchievement (
+      ${AchievementFields.id} $idType,
+      ${AchievementFields.user_id} $textType,
+      ${AchievementFields.datestamp} $textType,
+      ${AchievementFields.achievementlvl} $intType
+    )
+    ''');
+  }
+
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async{
+    oldVersion = 7;
+    newVersion = 8;
+
+    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    final intType = 'INTEGER NOT NULL';
+    final textType = 'TEXT NOT NULL';
+
+    await db.execute('''
+    CREATE TABLE $tableAchievement (
+      ${AchievementFields.id} $idType,
+      ${AchievementFields.user_id} $textType,
+      ${AchievementFields.datestamp} $textType,
+      ${AchievementFields.achievementlvl} $intType
     )
     ''');
   }
@@ -70,6 +97,17 @@ class FloorsDatabase{
     return result.map((json) => User.fromJson(json)).toList();
   }
 
+  Future<List<User>> readAllUsersForStats() async{
+    final db = await instance.database;
+
+    final orderBy = '${UserFields.floors}';
+    final prom = 0;
+    final where = '${UserFields.floors} >$prom';
+    final result = await db.query(tableUser,where: where,orderBy: orderBy);
+
+    return result.map((json) => User.fromJson(json)).toList();
+  }
+
   Future<int> update(User user) async{
     final db = await instance.database;
 
@@ -90,6 +128,33 @@ class FloorsDatabase{
       whereArgs: [id],
     );
   }
+
+  Future<Achievement> createAchievement(Achievement achievement) async{
+    final db = await instance.database;
+
+    final id = await db.insert(tableAchievement, achievement.toJson());
+    return achievement.copy(id:id);
+  }
+
+  Future<List<Achievement>> readAllAchievements() async{
+    final db = await instance.database;
+
+    final result = await db.query(tableAchievement);
+
+    return result.map((json) => Achievement.fromJson(json)).toList();
+  }
+
+  Future<int> updateAchievement(Achievement achievement) async{
+    final db = await instance.database;
+
+    return db.update(
+      tableAchievement,
+      achievement.toJson(),
+      where: '${AchievementFields.id} = ?',
+      whereArgs: [achievement.id],
+    );
+  }
+
 
   Future close() async{
     final db = await instance.database;

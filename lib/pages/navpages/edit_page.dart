@@ -8,6 +8,7 @@ import 'package:ebrana_schody/widgets/responsive_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../db/achievement.dart';
 import '../../db/user.dart';
 import '../../widgets/app_text.dart';
 
@@ -106,10 +107,31 @@ class _EditPageState extends State<EditPage> {
               SizedBox(height: 40),
               Center(child: AppLargeText(text: "Editace:", size: 20, color: AppColors.textColor1)),
               SizedBox(height: 20),
-              Center(child: ResponsiveButton(textButton: "Synchronizovat",width: 200)),
+              Center(
+                child: ElevatedButton(
+                    child:
+                    AppText(text: "Přidat achievement"),
+                    onPressed: (){
+                      var test3 = widget.activeUser.id;
+                      final achievement = Achievement(
+                          user_id: widget.activeUser.login,
+                          datestamp: DateTime.now(),
+                          achievementlvl: 5);
+                          FloorsDatabase.instance.createAchievement(achievement);
+                          print(FloorsDatabase.instance.readAllAchievements());
+                    }
+                ),
+              ),
               SizedBox(height: 20),
-              Center(child: ResponsiveButton(textButton: "Resetovat statistiky",width: 220)),
-              SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                    child:
+                    AppText(text: "Resetovat patra"),
+                    onPressed: (){
+                        StatReset();
+                    }
+                ),
+              ),
             ]
         ),
       ),
@@ -134,5 +156,15 @@ class _EditPageState extends State<EditPage> {
     }else{
       throw Exception("staré heslo je zadané špatně");
     }
+  }
+  Future StatReset() async{
+    final user = widget.activeUser.copy(
+        id: widget.activeUser.id,
+        email: widget.activeUser.email,
+        login: widget.activeUser.login,
+        password: widget.activeUser.password,
+        floors: 1100);
+
+    await FloorsDatabase.instance.update(user);
   }
 }

@@ -43,6 +43,8 @@ dependencies:
 
   crypt: ^4.2.1
 
+  pedometer: ^3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
