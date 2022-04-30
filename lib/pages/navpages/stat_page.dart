@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:ebrana_schody/db/achievement.dart';
+import 'package:ebrana_schody/db/floors_database.dart';
 import 'package:ebrana_schody/misc/colors.dart';
 import 'package:ebrana_schody/widgets/app_large_text.dart';
 import 'package:ebrana_schody/widgets/app_text.dart';
@@ -16,6 +20,46 @@ class StatPage extends StatefulWidget {
 }
 
 class _StatPageState extends State<StatPage> {
+
+  late List<Achievement> achievements;
+
+  @override
+  void initState(){
+    super.initState();
+    checkAchievements();
+  }
+
+  Future checkAchievements() async {
+    this.achievements = await FloorsDatabase.instance.readAllAchievements();
+  }
+
+  List mountains = [
+    107,
+    533,
+    885,
+    987,
+    1603,
+    2949,
+  ];
+
+  List mountainsNames = [
+    "Vaalserberg",
+    "Sněžka",
+    "Gerlachovský štít",
+    "Zugspitze",
+    "Mont Blanc",
+    "Mount Everest",
+  ];
+
+  List mountainsImages = [
+    "vaalsberg.png",
+    "snezka.jpg",
+    "gerlach.png",
+    "zug.png",
+    "mb.png",
+    "everest.png",
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +122,7 @@ class _StatPageState extends State<StatPage> {
                   child: ListView.builder(
                       physics: ScrollPhysics(parent: null),
                       shrinkWrap: true,
-                      itemCount: 5,
+                      itemCount: mountains.length,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (_, index){
                         return Column(
@@ -112,7 +156,7 @@ class _StatPageState extends State<StatPage> {
                                             borderRadius: BorderRadius.circular(80),
                                             image: DecorationImage(
                                                 image: AssetImage(
-                                                    "img/snezka.jpg"
+                                                    "img/"+mountainsImages[index]
                                                 ),
                                                 fit: BoxFit.cover
                                             )
@@ -125,7 +169,7 @@ class _StatPageState extends State<StatPage> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
-                                            AppLargeText(text: "Sněžka", color: AppColors.textColor2,size: 18),
+                                            AppLargeText(text: mountainsNames[index], color: AppColors.textColor2,size: 18),
                                             AppText(text: "Počet vystoupaných pater odpovídá výšce dané hory."),
                                             SizedBox(height: 10),
                                             Column(
@@ -140,7 +184,8 @@ class _StatPageState extends State<StatPage> {
                                                   ),
                                                 ),
                                                 Container(
-                                                  width: 150,
+                                                  width: (widget.activeUser.floors.toDouble()/mountains[index])*200,
+                                                  constraints: BoxConstraints(minWidth: 0, maxWidth: 200),
                                                   transform: Matrix4.translationValues(0.0, -4.0, 0.0),
                                                   decoration: BoxDecoration(
                                                     border: Border(
@@ -151,7 +196,7 @@ class _StatPageState extends State<StatPage> {
                                               ],
                                             ),
                                             SizedBox(height: 10),
-                                            AppText(text: "450/460"),
+                                            AppText(text: widget.activeUser.floors.toString()+"/"+mountains[index].toString()),
                                           ],
                                         ),
                                       )
@@ -170,4 +215,6 @@ class _StatPageState extends State<StatPage> {
         )
     );
   }
+
+
 }

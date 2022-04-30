@@ -10,6 +10,7 @@ import 'package:ebrana_schody/widgets/responsive_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../db/achievement.dart';
 import '../db/floors_database.dart';
 import '../db/user.dart';
 
@@ -115,7 +116,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                   child:
                                   AppText(text: "Přihlásit se"),
                                   onPressed: (){
-                                    refreshUsers();
+                                    //refreshUsers();
                                     if(formKeyLog.currentState!.validate()){
                                       check();
                                     }
@@ -145,18 +146,17 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Future check() async{
 
-    User user = User(email: "email", login: "", password: "", floors: 0);
+    User user = User(email: "", login: "", password: "", floors: 0);
 
     for(int i=0;i<=users.length-1;i++){
       if((users[i].login == "@"+loginController.text) && (users[i].password == Crypt.sha256(pwdController.text, salt: "radekjenejvetsiborec").toString())){
         user = users[i];
+
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => MainPage(activeUser: user),
         ));
-      }else if((users[i].login != "@"+loginController.text) || (users[i].password != Crypt.sha256(pwdController.text, salt: "radekjenejvetsiborec").toString())){
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const WelcomePage())
-        );
+      }else{
+        print("osetrit podminku");
       }
     }
   }

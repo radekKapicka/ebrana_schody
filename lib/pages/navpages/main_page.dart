@@ -8,6 +8,7 @@ import 'package:ebrana_schody/pages/welcome_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../db/achievement.dart';
 import '../../db/floors_database.dart';
 import '../../db/user.dart';
 
@@ -21,9 +22,9 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int currentIndex =1;
+  int currentIndex =3;
 
-  void onTap(int index){
+    void onTap(int index){
     setState(() {
       currentIndex = index;
     });
