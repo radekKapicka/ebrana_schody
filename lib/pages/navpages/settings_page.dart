@@ -10,17 +10,15 @@ import 'package:flutter/material.dart';
 import '../../db/floors_database.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({Key? key, required this.activeUser}) : super(key: key);
+
+  final User activeUser;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  List pages = [
-    SettingsPageStats(),
-    EditPage(),
-  ];
   int currentIndex =0;
   int clickCounter = 0;
 
@@ -112,12 +110,18 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              AppLargeText(text: "@", color: AppColors.textColor1,size: 20),
+                              AppLargeText(text: widget.activeUser.login, color: AppColors.textColor1,size: 20),
                             ],
                           ),
                         ),
                       ),
-                      pages[currentIndex],
+                      IndexedStack(
+                        index: currentIndex,
+                        children: [
+                          SettingsPageStats(),
+                          EditPage(activeUser: widget.activeUser),
+                        ],
+                      ),
                     ],
                   ),
                 ),

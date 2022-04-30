@@ -57,12 +57,7 @@ class _HomePageState extends State<HomePage> {
               transform: Matrix4.translationValues(0.0, -40.0, 0.0),
               width: double.maxFinite,
               height: double.maxFinite,
-              child:isLoading
-              ? CircularProgressIndicator()
-              : users.isEmpty
-                ? AppText(
-                  text: "žádní uživatelé",
-              ): ListView.builder(
+              child: ListView.builder(
                 itemCount: 1,
                 itemBuilder: (_,index){
                   refreshUsers();

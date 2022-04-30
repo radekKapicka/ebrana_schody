@@ -8,22 +8,21 @@ import 'package:ebrana_schody/pages/welcome_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../db/floors_database.dart';
+import '../../db/user.dart';
+
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key, required this.activeUser}) : super(key: key);
+
+  final User activeUser;
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  List pages = [
-    //LadderPage(),
-    RegistrationPage(),
-    //HomePage(),
-    StatPage(),
-    SettingsPage(),
-  ];
-  int currentIndex =0;
+  int currentIndex =1;
+
   void onTap(int index){
     setState(() {
       currentIndex = index;
@@ -33,7 +32,16 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[currentIndex],
+      body: IndexedStack(
+        index: currentIndex,
+        children: [
+          LadderPage(),
+          //RegistrationPage(),
+          HomePage(activeUser:widget.activeUser),
+          StatPage(activeUser:widget.activeUser),
+          SettingsPage(activeUser:widget.activeUser),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTap,
         currentIndex: currentIndex,

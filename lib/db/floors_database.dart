@@ -45,20 +45,20 @@ class FloorsDatabase{
     return user.copy(id:id);
   }
 
-  Future<User> readUser(int id) async{
+  Future<User> readUser(String login) async{
     final db = await instance.database;
 
     final maps = await db.query(
       tableUser,
       columns: UserFields.values,
-      where: '${UserFields.id} = ?',
-      whereArgs: [id],
+      where: '${UserFields.login} = ?',
+      whereArgs: [login],
     );
 
     if(maps.isNotEmpty){
       return User.fromJson(maps.first);
     }else{
-      throw Exception('ID $id not found');
+      throw Exception('ID $login not found');
     }
   }
 
