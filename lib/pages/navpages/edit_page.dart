@@ -10,6 +10,7 @@ import 'package:ebrana_schody/widgets/input_text.dart';
 import 'package:ebrana_schody/widgets/responsive_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pedometer/pedometer.dart';
 
 import '../../db/achievement.dart';
 import '../../db/user.dart';
@@ -35,15 +36,43 @@ class _EditPageState extends State<EditPage> {
 
   late List<Achievement> achievements;
 
+  late Stream<StepCount> _stepCountStream;
+  String _steps = '?';
+
+  int myStep=0;
+
   @override
   void initState(){
     super.initState();
     checkAchievements();
+    initPlatformState();
   }
 
 
   Future checkAchievements() async {
     this.achievements = await FloorsDatabase.instance.readAllAchievements();
+  }
+
+  void onStepCount(StepCount event) {
+    print(event);
+    setState(() {
+      myStep+=1;
+      _steps = event.steps.toString();
+    });
+  }
+
+  void onStepCountError(error) {
+    print('onStepCountError: $error');
+    setState(() {
+      _steps = 'Step Count not available';
+    });
+  }
+
+  void initPlatformState() {
+    _stepCountStream = Pedometer.stepCountStream;
+    _stepCountStream.listen(onStepCount).onError(onStepCountError);
+
+    if (!mounted) return;
   }
 
   List mountains = [
@@ -179,13 +208,14 @@ class _EditPageState extends State<EditPage> {
       throw Exception("staré heslo je zadané špatně");
     }
   }
+
   Future StatReset() async{
     final user = widget.activeUser.copy(
         id: widget.activeUser.id,
         email: widget.activeUser.email,
         login: widget.activeUser.login,
         password: widget.activeUser.password,
-        floors: 890);
+        floors: 1599);
 
     await FloorsDatabase.instance.update(user);
     Navigator.of(context).push(MaterialPageRoute(
@@ -194,6 +224,14 @@ class _EditPageState extends State<EditPage> {
   }
 
   Future StatSync() async{
+
+    final user = widget.activeUser.copy(
+        id: widget.activeUser.id,
+        email: widget.activeUser.email,
+        login: widget.activeUser.login,
+        password: widget.activeUser.password,
+        floors: widget.activeUser.floors + myStep);
+    myStep = 0;
 
     if(widget.activeUser.floors >= mountains[0] && widget.activeUser.floors < mountains[1]){
       final achievement = Achievement(
@@ -239,10 +277,9 @@ class _EditPageState extends State<EditPage> {
       await FloorsDatabase.instance.createAchievement(achievement);
     }
 
+    await FloorsDatabase.instance.update(user);
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => MainPage(activeUser: widget.activeUser)
-    )).then((value) => setState(() {
-      checkAchievements();
-    }));
+      builder: (context) => MainPage(activeUser: user),
+    ));
   }
 }
