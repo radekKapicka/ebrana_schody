@@ -1,12 +1,12 @@
 import 'package:ebrana_schody/widgets/app_text.dart';
 import 'package:pedometer/pedometer.dart';
-
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 
 String formatDate(DateTime d) {
-  return d.toString().substring(0, 19);
+  return 0.toString();
 }
 
 void main() {
@@ -23,10 +23,20 @@ class _PedoAppState extends State<PedoApp> {
   late Stream<PedestrianStatus> _pedestrianStatusStream;
   String _status = '?', _steps = '?';
 
+  var x;
+  var y;
+  var z;
+
   @override
   void initState() {
     super.initState();
     initPlatformState();
+
+    accelerometerEvents.listen((AccelerometerEvent event) {
+        x = event.x;
+        y = event.y;
+        z = event.z;
+    });
   }
 
   void onStepCount(StepCount event) {
@@ -72,12 +82,12 @@ class _PedoAppState extends State<PedoApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-            child:
-              Text(
-                _steps,
-                style: TextStyle(fontSize: 60),
-              ),
+    return Column(
+            children:[
+              Text(x, style: TextStyle(fontSize: 60),),
+              Text(y, style: TextStyle(fontSize: 60),),
+              Text(z, style: TextStyle(fontSize: 60),),
+            ]
         );
   }
 }

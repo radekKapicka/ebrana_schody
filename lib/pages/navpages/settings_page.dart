@@ -134,7 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       IndexedStack(
                         index: currentIndex,
                         children: [
-                          SettingsPageStats(),
+                          SettingsPageStats(activeUser: widget.activeUser),
                           EditPage(activeUser: widget.activeUser),
                         ],
                       ),
