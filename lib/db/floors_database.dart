@@ -131,15 +131,29 @@ class FloorsDatabase{
 
   Future<Achievement> createAchievement(Achievement achievement) async{
     final db = await instance.database;
+    int achilvl= achievement.achievementlvl;
+    String UID = achievement.user_id;
+    DateTime Date = achievement.datestamp;
 
-    final id = await db.insert(tableAchievement, achievement.toJson());
+    //final id = await db.insert(tableAchievement, achievement.toJson());
+
+    final id = await db.rawInsert('''
+    INSERT INTO $tableAchievement (${AchievementFields.user_id}, ${AchievementFields.datestamp},${AchievementFields.achievementlvl})
+      SELECT * FROM (SELECT '$UID', '$Date', '$achilvl') AS tmp
+      WHERE NOT EXISTS (
+      SELECT ${AchievementFields.user_id},${AchievementFields.achievementlvl} FROM $tableAchievement 
+      WHERE ${AchievementFields.user_id} = '$UID' AND ${AchievementFields.achievementlvl} = '$achilvl'
+    ) LIMIT 1;
+    )
+    ''');
+
     return achievement.copy(id:id);
   }
 
   Future<List<Achievement>> readAllAchievements() async{
     final db = await instance.database;
-
-    final result = await db.query(tableAchievement);
+    final orderBy = '${AchievementFields.datestamp} DESC';
+    final result = await db.query(tableAchievement, orderBy: orderBy);
 
     return result.map((json) => Achievement.fromJson(json)).toList();
   }
@@ -159,5 +173,11 @@ class FloorsDatabase{
   Future close() async{
     final db = await instance.database;
     db.close();
+  }
+
+  Future<int> deleteAchi() async{
+    final db = await instance.database;
+
+    return await db.rawDelete('DELETE FROM $tableAchievement');
   }
 }

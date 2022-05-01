@@ -150,6 +150,7 @@ class _EditPageState extends State<EditPage> {
                     AppText(text: "Resetovat patra"),
                     onPressed: (){
                         StatReset();
+                      //FloorsDatabase.instance.deleteAchi();
                     }
                 ),
               ),
@@ -184,7 +185,7 @@ class _EditPageState extends State<EditPage> {
         email: widget.activeUser.email,
         login: widget.activeUser.login,
         password: widget.activeUser.password,
-        floors: 250);
+        floors: 890);
 
     await FloorsDatabase.instance.update(user);
     Navigator.of(context).push(MaterialPageRoute(
@@ -194,82 +195,50 @@ class _EditPageState extends State<EditPage> {
 
   Future StatSync() async{
 
-    if(widget.activeUser.floors >= mountains[0]){
+    if(widget.activeUser.floors >= mountains[0] && widget.activeUser.floors < mountains[1]){
       final achievement = Achievement(
           user_id: widget.activeUser.login,
           datestamp: DateTime.now(),
           achievementlvl: 0);
 
-      for(int i=0;i<=achievements.length-1;i++){
-        if(achievements[i].achievementlvl == 0){
-          if(achievements[i].user_id == widget.activeUser.login){
-            await FloorsDatabase.instance.createAchievement(achievement);
-          }
-
-        }
-      }
-
+        await FloorsDatabase.instance.createAchievement(achievement);
     }else if(widget.activeUser.floors >= mountains[1] && widget.activeUser.floors < mountains[2]){
       final achievement = Achievement(
           user_id: widget.activeUser.login,
           datestamp: DateTime.now(),
           achievementlvl: 1);
 
-      for(int i=0;i<=achievements.length-1;i++){
-        if(achievements[i].achievementlvl != 1 && achievements[i].user_id != widget.activeUser.login){
-          await FloorsDatabase.instance.createAchievement(achievement);
-        }
-      }
-
+      await FloorsDatabase.instance.createAchievement(achievement);
     }else if(widget.activeUser.floors >= mountains[2] && widget.activeUser.floors < mountains[3]){
       final achievement = Achievement(
           user_id: widget.activeUser.login,
           datestamp: DateTime.now(),
           achievementlvl: 2);
 
-      for(int i=0;i<=achievements.length-1;i++){
-        if(achievements[i].achievementlvl != 2 && achievements[i].user_id != widget.activeUser.login){
-          await FloorsDatabase.instance.createAchievement(achievement);
-        }
-      }
-
+      await FloorsDatabase.instance.createAchievement(achievement);
     }else if(widget.activeUser.floors >= mountains[3] && widget.activeUser.floors < mountains[4]){
       final achievement = Achievement(
           user_id: widget.activeUser.login,
           datestamp: DateTime.now(),
           achievementlvl: 3);
 
-      for(int i=0;i<=achievements.length-1;i++){
-        if(achievements[i].achievementlvl != 3 && achievements[i].user_id != widget.activeUser.login){
-          await FloorsDatabase.instance.createAchievement(achievement);
-        }
-      }
-
+      await FloorsDatabase.instance.createAchievement(achievement);
     }else if(widget.activeUser.floors >= mountains[4] && widget.activeUser.floors < mountains[5]){
       final achievement = Achievement(
           user_id: widget.activeUser.login,
           datestamp: DateTime.now(),
           achievementlvl: 4);
 
-      for(int i=0;i<=achievements.length-1;i++){
-        if(achievements[i].achievementlvl != 4 && achievements[i].user_id != widget.activeUser.login){
-          await FloorsDatabase.instance.createAchievement(achievement);
-        }
-      }
-
+      await FloorsDatabase.instance.createAchievement(achievement);
     }else if(widget.activeUser.floors >= mountains[5]){
       final achievement = Achievement(
           user_id: widget.activeUser.login,
           datestamp: DateTime.now(),
           achievementlvl: 5);
 
-      for(int i=0;i<=achievements.length-1;i++){
-        if(achievements[i].achievementlvl != 5 && achievements[i].user_id != widget.activeUser.login){
-          await FloorsDatabase.instance.createAchievement(achievement);
-        }
-      }
-
+      await FloorsDatabase.instance.createAchievement(achievement);
     }
+
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MainPage(activeUser: widget.activeUser)
     )).then((value) => setState(() {
