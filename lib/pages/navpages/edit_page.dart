@@ -178,11 +178,32 @@ class _EditPageState extends State<EditPage> {
                     child:
                     AppText(text: "Resetovat patra"),
                     onPressed: (){
-                        StatReset();
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: AppLargeText(text: "Reset statistik"),
+                            content: AppText(text:"Opravdu chcete resetovat statistiky?"),
+                            actions: [
+                              ElevatedButton(
+                                child:
+                                AppText(text: "ANO"),
+                                  onPressed: (){
+                                    StatReset();
+                                  }
+                              ),
+                              ElevatedButton(
+                                child:
+                                AppText(text: "NE"),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ],
+                          )
+                      );
                       //FloorsDatabase.instance.deleteAchi();
                     }
                 ),
               ),
+              SizedBox(height: 20),
             ]
         ),
       ),
@@ -202,10 +223,38 @@ class _EditPageState extends State<EditPage> {
       await FloorsDatabase.instance.update(user);
 
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SettingsPage(activeUser: widget.activeUser),
+        builder: (context) => MainPage(activeUser: widget.activeUser),
       ));
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: AppLargeText(text: "Změna hesla proběhla v pořádku"),
+            content: AppText(text:"Vaše heslo bylo změněno"),
+            actions: [
+              ElevatedButton(
+                child:
+                AppText(text: "OK"),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          )
+      );
     }else{
-      throw Exception("staré heslo je zadané špatně");
+      //throw Exception("staré heslo je zadané špatně");
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: AppLargeText(text: "Změna hesla se nepodařila"),
+            content: AppText(text:"Staré heslo je zadané špatně"),
+            actions: [
+              ElevatedButton(
+                child:
+                AppText(text: "Zkusit znovu"),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          )
+      );
     }
   }
 
@@ -215,7 +264,7 @@ class _EditPageState extends State<EditPage> {
         email: widget.activeUser.email,
         login: widget.activeUser.login,
         password: widget.activeUser.password,
-        floors: 1599);
+        floors: 0);
 
     await FloorsDatabase.instance.update(user);
     Navigator.of(context).push(MaterialPageRoute(
@@ -281,5 +330,20 @@ class _EditPageState extends State<EditPage> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MainPage(activeUser: user),
     ));
+
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: AppLargeText(text: "Synchronizace v pořádku"),
+          content: AppText(text:"Statistiky byly úspěšně synchronizovány"),
+          actions: [
+            ElevatedButton(
+              child:
+              AppText(text: "OK"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        )
+    );
   }
 }

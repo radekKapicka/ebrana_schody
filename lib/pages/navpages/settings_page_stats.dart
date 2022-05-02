@@ -48,6 +48,7 @@ class _SettingsPageStatsState extends State<SettingsPageStats> {
   Future refreshUsers() async{
     this.user = await FloorsDatabase.instance.readUser(widget.activeUser.login);
     this.users = await FloorsDatabase.instance.readAllUsersForStats();
+    print(users[1]);
   }
 
   @override
@@ -88,7 +89,7 @@ class _SettingsPageStatsState extends State<SettingsPageStats> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(((users.indexOf(widget.activeUser)*-1)+1).toString(), style: TextStyle(fontSize: 18),),
+                              Text((users.indexOf(user)).toString(), style: TextStyle(fontSize: 18),),
                             ],
                           ),
                         ),
