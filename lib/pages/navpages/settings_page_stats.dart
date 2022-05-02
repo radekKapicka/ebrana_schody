@@ -33,6 +33,7 @@ class _SettingsPageStatsState extends State<SettingsPageStats> {
 
   late List<User> users = [User(email: "", login: "", password: "", floors: widget.activeUser.floors)];
   late User user = new User(email: "", login: "", password: "", floors: widget.activeUser.floors);
+  List<String> pom1 = [];
 
   @override
   void initState() {
@@ -48,7 +49,14 @@ class _SettingsPageStatsState extends State<SettingsPageStats> {
   Future refreshUsers() async{
     this.user = await FloorsDatabase.instance.readUser(widget.activeUser.login);
     this.users = await FloorsDatabase.instance.readAllUsersForStats();
-    print(users[1]);
+    getUser();
+  }
+  
+  Future getUser() async{
+    for(int i =0;i<=users.length-1;i++){
+      pom1.add(users[i].login);
+    }
+    print(pom1.indexOf(widget.activeUser.login)+1);
   }
 
   @override
@@ -89,7 +97,7 @@ class _SettingsPageStatsState extends State<SettingsPageStats> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text((users.indexOf(user)).toString(), style: TextStyle(fontSize: 18),),
+                              AppLargeText(text: (pom1.indexOf(widget.activeUser.login)+1).toString(), size: 18,color: AppColors.white)
                             ],
                           ),
                         ),
@@ -117,7 +125,7 @@ class _SettingsPageStatsState extends State<SettingsPageStats> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(user.floors.toString(), style: TextStyle(fontSize: 18),),
+                              AppLargeText(text: user.floors.toString(), size: 18,color: AppColors.white,)
                             ],
                           ),
                         ),
