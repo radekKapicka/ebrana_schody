@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:ebrana_schody/db/floors_database.dart';
 import 'package:ebrana_schody/db/user.dart';
 import 'package:ebrana_schody/misc/colors.dart';
@@ -201,12 +203,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
   Future addUser() async{
-    if((pwdController.text == pwdControllController.text) && (!users.contains(loginController.text))){
-      final user = User(
-          email: emailController.text,
-          login: "@"+loginController.text,
-          password: Crypt.sha256(pwdController.text, salt: "radekjenejvetsiborec").toString(),
-          floors: 0);
+
+    final user = User(
+        email: emailController.text,
+        login: "@"+loginController.text,
+        password: Crypt.sha256(pwdController.text, salt: "radekjenejvetsiborec").toString(),
+        floors: 0);
+
+    List<String> pomSearch = [""];
+
+    for(int i=0;i<=users.length-1;i++){
+      pomSearch.add(users[i].login);
+    }
+
+    if((pwdController.text == pwdControllController.text) && (pomSearch.contains("@"+loginController.text)  == false)){
+
       await FloorsDatabase.instance.create(user);
 
       Navigator.of(context).push(MaterialPageRoute(
@@ -214,7 +225,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ));
       //print(pwdController.text);
     }else{
-      throw Exception("hesla se neshodují nebo login již existuje");
+      //throw Exception("hesla se neshodují nebo login již existuje");
+
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: AppLargeText(text: "Registrace se nepovedla"),
+              content: AppText(text:"Zadaná hesla se nehsodují nebo vámi vybraný login již existuje"),
+              actions: [
+                ElevatedButton(
+                  child:
+                  AppText(text: "Zkusit znovu"),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            )
+        );
+
     }
     //print(loginController.text);
     //await FloorsDatabase.instance.create(user);

@@ -155,8 +155,24 @@ class _WelcomePageState extends State<WelcomePage> {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => MainPage(activeUser: user),
         ));
+        break;
       }else{
-        print("osetrit podminku");
+        if(i == users.length-1){
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: AppLargeText(text: "Přihlášení se nepodařilo"),
+                content: AppText(text:"Bylo zadáno špatné heslo nebo login"),
+                actions: [
+                  ElevatedButton(
+                    child:
+                    AppText(text: "Zkusit znovu"),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              )
+          );
+        }
       }
     }
   }
